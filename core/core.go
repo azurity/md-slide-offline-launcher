@@ -74,18 +74,24 @@ func (content *DocsContent) LoadDoc(folder string, result *bool) error {
 	item := systray.AddMenuItem(s.meta.Title, "")
 	displayBtn := item.AddSubMenuItem("Display", "")
 	go func() {
-		<-displayBtn.ClickedCh
-		_ = openurl.Open("http://" + s.addr.String() + "/slide/" + s.meta.Uuid + "/index.html")
+		for {
+			<-displayBtn.ClickedCh
+			_ = openurl.Open("http://" + s.addr.String() + "/slide/" + s.meta.Uuid + "/index.html")
+		}
 	}()
 	speakerBtn := item.AddSubMenuItem("Speaker", "")
 	go func() {
-		<-speakerBtn.ClickedCh
-		_ = openurl.Open("http://" + s.addr.String() + "/slide/" + s.meta.Uuid + "/index.html?mode=speaker")
+		for {
+			<-speakerBtn.ClickedCh
+			_ = openurl.Open("http://" + s.addr.String() + "/slide/" + s.meta.Uuid + "/index.html?mode=speaker")
+		}
 	}()
 	rawBtn := item.AddSubMenuItem("Raw", "")
 	go func() {
-		<-rawBtn.ClickedCh
-		_ = openurl.Open("http://" + s.addr.String() + "/slide/" + s.meta.Uuid + "/index.md")
+		for {
+			<-rawBtn.ClickedCh
+			_ = openurl.Open("http://" + s.addr.String() + "/slide/" + s.meta.Uuid + "/index.md")
+		}
 	}()
 	closeBtn := item.AddSubMenuItem("Close", "")
 	go func() {
