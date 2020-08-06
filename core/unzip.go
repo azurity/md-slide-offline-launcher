@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const exeSize = 12 * 1024 * 1024
+const exeSize = 6 * 1024 * 1024
 
 type ExeZip struct {
 	file *os.File
