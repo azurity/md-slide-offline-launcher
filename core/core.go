@@ -23,7 +23,7 @@ func NewDocsContent(path string) *DocsContent {
 		Docs:    list.New(),
 	}
 	if err == nil {
-		if err := client.Call("LoadDoc", path, nil); err != nil {
+		if err := client.Call("DocsContent.LoadDoc", path, nil); err != nil {
 			log.Fatal(err)
 		}
 	} else {
@@ -58,10 +58,16 @@ func NewDocsContent(path string) *DocsContent {
 }
 
 func (content *DocsContent) Start() {
+	if content.rpcQuit == nil {
+		return
+	}
 	<-content.rpcQuit
 	for e := content.Docs.Front(); e != nil; e = e.Next() {
 		e.Value.(*DocServer).Close()
-		_ = os.RemoveAll(e.Value.(*DocServer).path)
+		if err := os.RemoveAll(e.Value.(*DocServer).path); err != nil {
+			log.Println(err)
+		}
+
 	}
 }
 
@@ -96,6 +102,10 @@ func (content *DocsContent) LoadDoc(folder string, result *bool) error {
 	closeBtn := item.AddSubMenuItem("Close", "")
 	go func() {
 		<-closeBtn.ClickedCh
+		displayBtn.Hide()
+		speakerBtn.Hide()
+		rawBtn.Hide()
+		closeBtn.Hide()
 		item.Hide()
 		content.Docs.Remove(e)
 		e.Value.(*DocServer).Close()
