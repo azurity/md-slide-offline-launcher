@@ -26,7 +26,7 @@ func newDocServer(folder string) (*DocServer, error) {
 		return nil, err
 	}
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.Dir(folder)))
+	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir(folder))))
 	srv := &http.Server{
 		Addr:              l.Addr().String(),
 		Handler:           mux,
@@ -59,7 +59,7 @@ func (server *DocServer) Close() {
 type Meta struct {
 	Title  string `json:"title"`
 	Author string `json:"author"`
-	Uuid string `json:"uuid"`
+	Uuid   string `json:"uuid"`
 }
 
 func getMeta(file string) (*Meta, error) {
